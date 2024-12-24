@@ -1,0 +1,46 @@
+[
+  {
+    "id": "6db99f8e-924c-4d9b-bd23-9917d8301b3a",
+    "title": "Smart TV LG",
+    "description": "Televisor smart ANdroid",
+    "code": "cod652",
+    "price": 980,
+    "status": true,
+    "stock": 6,
+    "category": "TV",
+    "thumbnails": []
+  },
+  {
+    "id": "1c7c235e-4c33-4cb7-a00d-db7028b6c972",
+    "title": "SmartPhone",
+    "description": "Descripción SmartPhone Samsung",
+    "code": "COD564",
+    "price": 3500,
+    "status": true,
+    "stock": 2,
+    "category": "SmartPhone",
+    "thumbnails": []
+  },
+  {
+    "id": "6a4afdc1-3363-4221-b485-b01dc8a1a6d0",
+    "title": "SmartPhone",
+    "description": "Descripción SmartPhone Samsung",
+    "code": "COD564",
+    "price": 3500,
+    "status": true,
+    "stock": 2,
+    "category": "SmartPhone",
+    "thumbnails": []
+  },
+  {
+    "id": "3f167557-6911-4857-881d-26a2f3988c69",
+    "title": "Tablet",
+    "description": "Descripción Tablet Samsung",
+    "code": "COD574",
+    "price": 4500,
+    "status": true,
+    "stock": 5,
+    "category": "Tablets",
+    "thumbnails": []
+  }
+]
