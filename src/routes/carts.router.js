@@ -24,7 +24,7 @@ cartsRouter.get('/:cid', async (req, res) => {
 
 cartsRouter.post('/', async (_, res) => {
   try {
-    const cart = await cartLogic.addCart({ products:[] })
+    const cart = await cartLogic.addCart()
     res.status(201).json(cart)
   } catch (error) {
     return res.status(500).json({ message: 'Error creating cart' })
@@ -35,22 +35,24 @@ cartsRouter.post('/', async (_, res) => {
 
 cartsRouter.post('/:cid/products/:pid', async (req, res) => {
   const { cid, pid } = req.params
+  //console.log("idCart: ", cid, "idProduct: ", pid)
 
   try {
+    //TODO: Busco el carrito por ID sino existe devuelvo error
     const cart = await cartLogic.getCartById({ id: cid })
     if (!cart) {
       return res.status(404).json({ message: `Cart with ID: ${cid} not found` })
     }
 
-    // Incrementando la cantidad de productos si el carrito existe
-    const existingProductToCart = cart.products.findIndex(itemPro => itemPro.id === pid)
-    if (!existingProductToCart != -1) {
+    //TODO: Incrementando la cantidad de productos si el producto existe en el carrito
+    const existingProductToCart = cart.products.findIndex(id => id.product === pid)
+    if (existingProductToCart !== -1) {
       cart.products[existingProductToCart].quantity++
     } else {
-      cart.products.push({ id: pid, quantity: 1 })
+      cart.products.push({ product: pid, quantity: 1 })
     }
 
-    // Actualizando el carrito con el nuevo producto
+    //TODO: Actualizando el carrito con el nuevo producto
     const updatedCart = await cartLogic.updateCart({ id: cid, products: cart.products })
     if (!updatedCart) {
       return res.status(404).json({ message: 'Error update cart' })

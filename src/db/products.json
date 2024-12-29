@@ -11,17 +11,6 @@
     "thumbnails": []
   },
   {
-    "id": "1c7c235e-4c33-4cb7-a00d-db7028b6c972",
-    "title": "SmartPhone",
-    "description": "Descripción SmartPhone Samsung",
-    "code": "COD564",
-    "price": 3500,
-    "status": true,
-    "stock": 2,
-    "category": "SmartPhone",
-    "thumbnails": []
-  },
-  {
     "id": "6a4afdc1-3363-4221-b485-b01dc8a1a6d0",
     "title": "SmartPhone",
     "description": "Descripción SmartPhone Samsung",

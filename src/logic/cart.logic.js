@@ -5,6 +5,7 @@ import { v4 as uuid } from 'uuid'
 class CartLogic {
   constructor({ path }) {
     this.path = path;
+    this.carts = []
     if (fs.existsSync(path)) {
       try {
         this.carts = JSON.parse(fs.readFileSync(this.path, 'utf-8'))
@@ -19,9 +20,9 @@ class CartLogic {
     return cart
   }
 
-  async addCart( ) {
+  async addCart( products = [] ) {
     const id = uuid()
-    const newCart = { id, products:[] }
+    const newCart = { id, products}
     this.carts.push(newCart)
 
     try {
@@ -33,15 +34,16 @@ class CartLogic {
     }
   }
   async updateCart({ id, products }) {
-      const cart = this.carts.find((cart) => cart.id === id)
-      if (!cart) {
-        console.error(`Cart with ID: ${id} not found`)
-        return null
-      }
+    // console.log(id, products)
+    const cart = this.carts.find((cart) => cart.id === id)
+    if (!cart) {
+      console.error(`Cart with ID: ${id} not found`)
+      return null
+    }
 
-      cart.products = products
-      const indexId = this.carts.findIndex(cart => cart.id === id)
-      this.carts[indexId] = cart
+    cart.products = products
+    const cartId = this.carts.findIndex(cart => cart.id === id)
+    this.carts[cartId] = cart
 
     try {
       await fsSave(this.path, this.carts)
