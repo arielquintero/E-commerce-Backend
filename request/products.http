@@ -1,0 +1,38 @@
+### GET Products
+
+GET http://localhost:8080/api/products
+
+### POST Products
+
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "title": "Mouse",
+  "description": "Descripción Mouese Samsung",
+  "code": "COD594",
+  "price": 500,
+  "status": true,
+  "stock": 39,
+  "category": "Mouse",
+  "thumbnails": []
+}
+
+### PUT Product
+
+PUT http://localhost:8080/api/products/6db99f8e-924c-4d9b-bd23-9917d8301b3a
+Content-Type: application/json
+
+{
+  "title": "Tablet",
+  "description": "Descripción Tablet Samsung",
+  "code": "COD574",
+  "price": 4500,
+  "status": true,
+  "stock": 3,
+  "category": "Tablets",
+  "thumbnails": []
+}
+
+### DELETE Product
+DELETE http://localhost:8080/api/products/6db99f8e-924c-4d9b-bd23-9917d8301b3a

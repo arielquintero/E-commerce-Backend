@@ -1,30 +1,8 @@
 [
   {
-    "id": "6db99f8e-924c-4d9b-bd23-9917d8301b3a",
-    "title": "Smart TV LG",
-    "description": "Televisor smart ANdroid",
-    "code": "cod652",
-    "price": 980,
-    "status": true,
-    "stock": 6,
-    "category": "TV",
-    "thumbnails": []
-  },
-  {
-    "id": "1c7c235e-4c33-4cb7-a00d-db7028b6c972",
-    "title": "SmartPhone",
-    "description": "Descripción SmartPhone Samsung",
-    "code": "COD564",
-    "price": 3500,
-    "status": true,
-    "stock": 2,
-    "category": "SmartPhone",
-    "thumbnails": []
-  },
-  {
     "id": "6a4afdc1-3363-4221-b485-b01dc8a1a6d0",
     "title": "SmartPhone",
-    "description": "Descripción SmartPhone Samsung",
+    "description": "SmartPhone Samsung",
     "code": "COD564",
     "price": 3500,
     "status": true,
@@ -33,7 +11,40 @@
     "thumbnails": []
   },
   {
-    "id": "3f167557-6911-4857-881d-26a2f3988c69",
+    "id": "96e44a0b-4537-4b7e-97bb-477cf233b1a1",
+    "title": "Monitor",
+    "description": "Descripción Monitor Samsung",
+    "code": "COD579",
+    "price": 4500,
+    "status": true,
+    "stock": 9,
+    "category": "Monitor",
+    "thumbnails": []
+  },
+  {
+    "id": "350de244-2701-42c3-a8b6-3e2aed35698d",
+    "title": "Chocolino",
+    "description": "Chocolate",
+    "code": "COD979",
+    "price": 40,
+    "status": true,
+    "stock": 900,
+    "category": "Comestible",
+    "thumbnails": []
+  },
+  {
+    "id": "42af9397-7cc4-4d99-a436-0a4cd9f296c8",
+    "title": "Azucar",
+    "description": "Ledesma",
+    "code": "COD129",
+    "price": 60,
+    "status": true,
+    "stock": 5900,
+    "category": "Comestible",
+    "thumbnails": []
+  },
+  {
+    "id": "60f29b9f-29c7-4a6b-9960-299d769db264",
     "title": "Tablet",
     "description": "Descripción Tablet Samsung",
     "code": "COD574",
@@ -41,6 +52,149 @@
     "status": true,
     "stock": 5,
     "category": "Tablets",
+    "thumbnails": []
+  },
+  {
+    "id": "cc782e99-748f-4695-8c2a-624c20a08e59",
+    "title": "Mouse",
+    "description": "Descripción Mouese Samsung",
+    "code": "COD594",
+    "price": 500,
+    "status": true,
+    "stock": 39,
+    "category": "Mouse",
+    "thumbnails": []
+  },
+  {
+    "id": "8e595491-768a-4d39-9843-ad9c5f732f28",
+    "title": "Masitas",
+    "description": "Descripción Masitas de Agua",
+    "code": "COD879",
+    "price": 29,
+    "status": true,
+    "stock": 1536,
+    "category": "Comestibles",
+    "thumbnails": []
+  },
+  {
+    "id": "df6b93c9-184a-4421-bccd-fd3cfce803d4",
+    "title": "Helado Grido",
+    "description": "Helado de Crema",
+    "code": "COD023",
+    "price": 65,
+    "status": true,
+    "stock": 3258,
+    "category": "Comestibles",
+    "thumbnails": []
+  },
+  {
+    "id": "6a4afdc1-3363-4221-b485-b01dc8a1a6d0",
+    "title": "SmartPhone",
+    "description": "SmartPhone Samsung",
+    "code": "COD564",
+    "price": 3500,
+    "status": true,
+    "stock": 2,
+    "category": "SmartPhone",
+    "thumbnails": []
+  },
+  {
+    "id": "96e44a0b-4537-4b7e-97bb-477cf233b1a1",
+    "title": "Monitor",
+    "description": "Descripción Monitor Samsung",
+    "code": "COD579",
+    "price": 4500,
+    "status": true,
+    "stock": 9,
+    "category": "Monitor",
+    "thumbnails": []
+  },
+  {
+    "id": "350de244-2701-42c3-a8b6-3e2aed35698d",
+    "title": "Chocolino",
+    "description": "Chocolate",
+    "code": "COD979",
+    "price": 40,
+    "status": true,
+    "stock": 900,
+    "category": "Comestible",
+    "thumbnails": []
+  },
+  {
+    "id": "42af9397-7cc4-4d99-a436-0a4cd9f296c8",
+    "title": "Azucar",
+    "description": "Ledesma",
+    "code": "COD129",
+    "price": 60,
+    "status": true,
+    "stock": 5900,
+    "category": "Comestible",
+    "thumbnails": []
+  },
+  {
+    "id": "60f29b9f-29c7-4a6b-9960-299d769db264",
+    "title": "Tablet",
+    "description": "Descripción Tablet Samsung",
+    "code": "COD574",
+    "price": 4500,
+    "status": true,
+    "stock": 5,
+    "category": "Tablets",
+    "thumbnails": []
+  },
+  {
+    "id": "cc782e99-748f-4695-8c2a-624c20a08e59",
+    "title": "Mouse",
+    "description": "Descripción Mouese Samsung",
+    "code": "COD594",
+    "price": 500,
+    "status": true,
+    "stock": 39,
+    "category": "Mouse",
+    "thumbnails": []
+  },
+  {
+    "id": "8e595491-768a-4d39-9843-ad9c5f732f28",
+    "title": "Masitas",
+    "description": "Descripción Masitas de Agua",
+    "code": "COD879",
+    "price": 29,
+    "status": true,
+    "stock": 1536,
+    "category": "Comestibles",
+    "thumbnails": []
+  },
+  {
+    "id": "df6b93c9-184a-4421-bccd-fd3cfce803d4",
+    "title": "Helado Grido",
+    "description": "Helado de Crema",
+    "code": "COD023",
+    "price": 65,
+    "status": true,
+    "stock": 3258,
+    "category": "Comestibles",
+    "thumbnails": []
+  },
+  {
+    "id": "10fbe388-43fe-4f27-a46b-5c7df6242fb3",
+    "title": "Jabon Ariel",
+    "description": "Jabon liquido",
+    "code": "COD002",
+    "price": 124,
+    "status": true,
+    "stock": 254,
+    "category": "Lavado",
+    "thumbnails": []
+  },
+  {
+    "id": "607af4fd-752e-484f-b4d9-d92b22132e18",
+    "title": "Mayonesa Natura",
+    "description": "Mayonesa Natura",
+    "code": "COD103",
+    "price": 52,
+    "status": true,
+    "stock": 324,
+    "category": "Comestibles",
     "thumbnails": []
   }
 ]

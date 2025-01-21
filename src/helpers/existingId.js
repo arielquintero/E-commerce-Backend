@@ -6,13 +6,3 @@ export const existingId = (array, id) => {
   }
   return false;
 };
-
-
-
-// export const existingId = (array) => {
-//   const id = array.find((item) => item.id === array.id) 
-//   if(id){
-//     console.log(`The ID: ${id} already exists`)
-//     return  
-//   }
-// }
