@@ -16,4 +16,11 @@ donde se gestionan productos y carritos.
 
 - [X] La logica de gestion de productos y carritos con getAllProducts, getProductById, addProducts, updateProduct, deleteProduct
 <spam>(GET / PUT / POST / DELETE)</spam>
-<h3> Segunda Pre-Entrega Lógica CRUD con el uso de SocketIO y Handlebars </h3>
+
+<h3> Segunda Pre-Entrega Lógica CRUD mas Websocket y Handlebars </h3>
+
+Se integro el uso del motor de plantillas Handlebars para renderizar las vistas tanto de home.hbs y realTimeProducts.hbs.
+Se integro tambien el uso de Websocket logrando actualizar crear y eliminar en tiempo real productos de un istados de productos provenientes del products.json.
+Utilizamos el midleware morgan para facilitar la vista de la peticiones por la terminal.
+Para dar estilos use Bulma.
+Se creo un pequeño navbar para moverse entre home y realtimeproducts.
