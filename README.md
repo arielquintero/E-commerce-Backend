@@ -16,3 +16,4 @@ donde se gestionan productos y carritos.
 
 - [X] La logica de gestion de productos y carritos con getAllProducts, getProductById, addProducts, updateProduct, deleteProduct
 <spam>(GET / PUT / POST / DELETE)</spam>
+<h3> Segunda Pre-Entrega Lógica CRUD con el uso de SocketIO y Handlebars </h3>
