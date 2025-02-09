@@ -2,37 +2,34 @@
 
 GET http://localhost:8080/api/products
 
+### GET Product ID
+
+GET http://localhost:8080/api/products/67a03133be2c0dc3707701c5
+
 ### POST Products
 
 POST http://localhost:8080/api/products
 Content-Type: application/json
 
 {
-  "title": "Mouse",
-  "description": "Descripción Mouese Samsung",
-  "code": "COD594",
-  "price": 500,
+  "title": "Sidra",
+  "description": "Descripción Sidra Tunuyan",
+  "code": "COD795",
+  "price": 35,
   "status": true,
-  "stock": 39,
-  "category": "Mouse",
+  "stock": 1423,
+  "category": "Comestibles",
   "thumbnails": []
 }
 
 ### PUT Product
 
-PUT http://localhost:8080/api/products/6db99f8e-924c-4d9b-bd23-9917d8301b3a
+PUT http://localhost:8080/api/products/67a03133be2c0dc3707701c5
 Content-Type: application/json
 
 {
-  "title": "Tablet",
-  "description": "Descripción Tablet Samsung",
-  "code": "COD574",
-  "price": 4500,
-  "status": true,
-  "stock": 3,
-  "category": "Tablets",
-  "thumbnails": []
+  "title": "Sidra Mza Roja"
 }
 
 ### DELETE Product
-DELETE http://localhost:8080/api/products/6db99f8e-924c-4d9b-bd23-9917d8301b3a
+DELETE http://localhost:8080/api/products/67a0c5a07428406dbf415a5e

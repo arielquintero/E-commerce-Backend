@@ -1,8 +1,49 @@
-
 <h1 class="title has-text-centered">Lista de Productos</h1>
 
+<form method="GET" action="/">
+
+  <div class="field">
+    <label class="label">Categoría</label>
+    <div class="control">
+      <div class="select">
+        <select name="category">
+          <option value="">Todas</option>
+          {{#each categories}}
+            <option value="{{this.name}}" {{#if this.isSelected}}selected{{/if}}>{{this.name}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Límite</label>
+    <div class="control">
+      <input class="input" type="number" name="limit" value="{{limit}}">
+    </div>
+  </div>
+
+  <div class="field is-flex-wrap-wrap">
+    <label class="label">Ordenar por</label>
+    <div class="control">
+      <div class="select">
+        <select name="sort" class="is-hovered">
+          <option value="">Más relevantes</option>
+          <option value="preAsc" {{#if preAsc}}selected{{/if}}>Menor precio</option>
+          <option value="preDesc" {{#if preDesc}}selected{{/if}}>Mayor precio</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="control pt-2 pb-5">
+    <button class="button is-primary" type="submit">Filtrar</button>
+  </div>
+
+</form>
+
 <div class="columns is-multiline">
-  {{#each products}}
+  {{#each products.docs}}
   <div class="column is-one-third">
     <div class="card">
       <div class="card-content">
@@ -17,4 +58,88 @@
   {{/each}}
 </div>
 
+<div class="position-relative m-4">
+  <nav class="navbar is-centered" role="navigation" aria-label="pagination">
+    <ul class="pagination-list">
+      {{#if products.hasPrevPage}}
+        <li>
+          <a class="pagination-previous" href="/?page={{products.prevPage}}&limit={{limit}}&category={{category}}&sort={{sort}}">
+            Previous
+          </a>
+        </li>
+      {{/if}}
 
+      {{#each products.pageNumbers}}
+        <li>
+          <a class="pagination-link {{#if this.isCurrent}}is-current{{/if}}" href="/?page={{this.page}}&limit={{../limit}}&category={{../category}}&&sort={{../sort}}">
+            {{this.page}}
+          </a>
+        </li>
+      {{/each}}
+
+      {{#if products.hasNextPage}}
+        <li>
+          <a class="pagination-next" href="/?page={{products.nextPage}}&limit={{limit}}&category={{category}}&sort={{sort}}">
+            Next
+          </a>
+        </li>
+      {{/if}}
+    </ul>
+  </nav>
+  <p class="pagination-link">
+    Current Page: {{products.page}}
+  </p>
+</div>
+
+
+
+{{!-- 
+<h1 class="title has-text-centered">Lista de Productos</h1>
+
+<div class="columns is-multiline">
+  {{#each products.docs}}
+  <div class="column is-one-third">
+    <div class="card">
+      <div class="card-content">
+        <p class="title"><strong>{{this.title}}</strong></p>
+        <p><strong>Description:</strong> {{this.description}}</p>
+        <p><strong>Code:</strong> {{this.code}}</p>
+        <p><strong>Price:</strong> ${{this.price}}</p>
+        <p><strong>Stock:</strong> {{this.stock}}</p>
+      </div>
+    </div>
+  </div>
+  {{/each}}
+</div>
+
+<div class="is-relative m-4">
+
+    <nav class="navbar is-centered" role="navigation" aria-label="pagination">
+      <ul class="pagination-list">
+        {{#if products.hasPrevPage}}
+          <li>
+            <a class="pagination-previous " href="/?page={{products.prevPage}}&&limit={{limit}}">
+              Previous
+            </a>
+          </li>
+        {{/if}}
+
+        {{! Links a siguientes páginas }}
+
+        {{#if products.hasNextPage}}
+          <li>
+            <a class="pagination-next"
+              href="/?page={{products.nextPage}}&&limit={{limit}}"
+            >Next page</a>
+          </li>
+        {{/if}}
+
+      </ul>
+    </nav>
+    <p class="pagination-link">
+      Current Page:
+      {{products.page}}
+    </p>
+  </div>
+
+ --}}

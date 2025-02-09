@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { cartLogic } from '../logic/cart.logic.js';
+import { cartsService } from '../service/carts.service.js';
 
 export const cartsRouter = Router();
 
@@ -8,7 +8,7 @@ cartsRouter.get('/:cid', async (req, res) => {
   const { cid } = req.params;
 
   try {
-    const cart = await cartLogic.getCartById({ id: cid });
+    const cart = await cartsService.getCartById({ _id: cid });
     res.status(200).json(cart.products);
   } catch (error) {
     return res.status(404).json({ message: error.message });
@@ -18,7 +18,7 @@ cartsRouter.get('/:cid', async (req, res) => {
 // POST CART => Crea un carrito
 cartsRouter.post('/', async (_, res) => {
   try {
-    const cart = await cartLogic.createNewCart();
+    const cart = await cartsService.createNewCart();
     res.status(201).json(cart);
   } catch (error) {
     return res.status(500).json({ message: 'Error creating cart' });
@@ -28,13 +28,13 @@ cartsRouter.post('/', async (_, res) => {
 // POST PRODUCT TO CART => Agrega un producto al carrito
 cartsRouter.post('/:cid/products/:pid', async (req, res) => {
   const { cid, pid } = req.params;
-  const { quantity = 1 } = req.body;
+
+  //const { quantity = 1 } = req.body;
 
   try {
-    const updatedCart = await cartLogic.addProductByIdCart({
-      cartId: cid,
-      productId: pid,
-      quantity,
+    const updatedCart = await cartsService.addProductByIdCart({
+      cid,
+      pid
     });
     res.status(200).json(updatedCart);
   } catch (error) {
@@ -42,79 +42,53 @@ cartsRouter.post('/:cid/products/:pid', async (req, res) => {
   }
 });
 
+cartsRouter.put('/:cid/products/:pid', async (req, res) => {
+  try {
+    const { cid, pid } = req.params;
+    const { quantity } = req.body;
+
+    const { updatedCart, updatedStock } = await cartsService.updateQuantityProduct(cid, pid, quantity)
+
+    console.log(updatedCart)
+    console.log(updatedStock)
 
 
-// import { Router } from 'express'
-// import { cartLogic } from '../logic/cart.logic.js'
+    res.status(200).json({
+      status : 'success',
+      payload: updatedCart,
+      stockRemaining: updatedStock 
+      })
 
-// export const cartsRouter = Router()
-
-// // GET CART BY ID => Lista productos en el carrito
-
-// cartsRouter.get('/:cid', async (req, res) => {
-//   const { cid } = req.params
-
-//   try {
-//     const cart = await cartLogic.getCartById({ id: cid})
-
-//     if (!cart) {
-//       return res.status(404).json({ message: `Cart with ID: ${cid} not found` })
-//     }
-//     res.status(200).json(cart.products)
-//   } catch (error) {
-//     return res.status(500).json({ message: 'Error accessing cart' })
-//   }
-// })
-
-// // POST CART => Crea un carrito
-
-// cartsRouter.post('/', async (_, res) => {
-//   try {
-//     const cart = await cartLogic.createNewCart()
-//     res.status(201).json(cart)
-//   } catch (error) {
-//     return res.status(500).json({ message: 'Error creating cart' })
-//   }
-// })
-
-// // POST PRODUCT TO CART => Agrega un producto al carrito
-
-// cartsRouter.post('/:cid/products/:pid', async (req, res) => {
-//   const { cid, pid } = req.params;
-
-//   const { quantity = 1 } = req.body;
-
-//   //console.log("idCart: ", cid, "idProduct: ", pid)
-
-//   try {
-//     //TODO: Busco el carrito por ID sino existe devuelvo error
-//     const cart = await cartLogic.getCartById({ id: cid })
-//     if (!cart) {
-//       return res.status(404).json({ message: `Cart with ID: ${cid} not found` })
-//     }
-
-//     const sendCart = await cartLogic.addProductByIdCart({ 
-//       cartId: cart,
-//       productId: pid,
-//       quantity,
-//     });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
 
 
-//     // //TODO: Incrementando la cantidad de productos si el producto existe en el carrito
-//     // const existingProductToCart = cart.products.findIndex(id => id.product === pid)
-//     // if (existingProductToCart !== -1) {
-//     //   cart.products[existingProductToCart].quantity++
-//     // } else {
-//     //   cart.products.push({ product: pid, quantity: 1 })
-//     // }
+})
 
-//     //TODO: Actualizando el carrito con el nuevo producto
-//     const updatedCart = await cartLogic.updateCart({ id: cid, products: cart.products })
-//     if (!updatedCart) {
-//       return res.status(404).json({ message: 'Error update cart' })
-//     }
-//     res.status(200).json(updatedCart)
-//   } catch (error) {
-//     return res.status(500).json({ message: 'Error adding product to cart' })
-//   }
-// })
+// ELIMINAR UN PRODUCTO DEL CARRITO
+cartsRouter.delete('/:cid/products/:pid', async (req, res) => {
+  const { cid, pid } = req.params;
+
+  try {
+    const updatedCart = await cartsService.deleteProductInCart({
+      cid,
+      pid,
+    });
+    res.status(200).json(updatedCart);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+
+// ELIMINAR TODOS LOS PRODUCTOS DEL CARRITO
+cartsRouter.delete('/:cid', async (req, res) => {
+  const { cid } = req.params;
+  
+  try {
+    await cartsService.deleteAllProductsInCart(cid);
+    res.status(200).json({ message: 'Cart empty' });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});

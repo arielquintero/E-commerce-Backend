@@ -1,16 +1,16 @@
 const socket = io()
 
 
-console.log('main.js is loaded');
+//console.log('main.js is loaded');
 
 console.log('Connecting to WebSocket server...');
 
 const productList = document.getElementById('products');
 
-socket.on('init', (products) => {
-  console.log('Products received from server:', products);
+socket.on('init', (product) => {
+  console.log('Products received from server:', product);
   productList.innerHTML = '';
-  products.forEach(product => {
+  product.forEach(product => {
     const card = createNewProducts(product);
     productList.appendChild(card);
   });

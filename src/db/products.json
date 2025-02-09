@@ -1,6 +1,5 @@
 [
   {
-    "id": "6a4afdc1-3363-4221-b485-b01dc8a1a6d0",
     "title": "SmartPhone",
     "description": "SmartPhone Samsung",
     "code": "COD564",
@@ -11,7 +10,6 @@
     "thumbnails": []
   },
   {
-    "id": "96e44a0b-4537-4b7e-97bb-477cf233b1a1",
     "title": "Monitor",
     "description": "Descripción Monitor Samsung",
     "code": "COD579",
@@ -22,7 +20,6 @@
     "thumbnails": []
   },
   {
-    "id": "350de244-2701-42c3-a8b6-3e2aed35698d",
     "title": "Chocolino",
     "description": "Chocolate",
     "code": "COD979",
@@ -33,7 +30,6 @@
     "thumbnails": []
   },
   {
-    "id": "42af9397-7cc4-4d99-a436-0a4cd9f296c8",
     "title": "Azucar",
     "description": "Ledesma",
     "code": "COD129",
@@ -44,7 +40,6 @@
     "thumbnails": []
   },
   {
-    "id": "60f29b9f-29c7-4a6b-9960-299d769db264",
     "title": "Tablet",
     "description": "Descripción Tablet Samsung",
     "code": "COD574",
@@ -55,7 +50,6 @@
     "thumbnails": []
   },
   {
-    "id": "cc782e99-748f-4695-8c2a-624c20a08e59",
     "title": "Mouse",
     "description": "Descripción Mouese Samsung",
     "code": "COD594",
@@ -66,7 +60,6 @@
     "thumbnails": []
   },
   {
-    "id": "8e595491-768a-4d39-9843-ad9c5f732f28",
     "title": "Masitas",
     "description": "Descripción Masitas de Agua",
     "code": "COD879",
@@ -77,7 +70,6 @@
     "thumbnails": []
   },
   {
-    "id": "df6b93c9-184a-4421-bccd-fd3cfce803d4",
     "title": "Helado Grido",
     "description": "Helado de Crema",
     "code": "COD023",
@@ -88,7 +80,6 @@
     "thumbnails": []
   },
   {
-    "id": "6a4afdc1-3363-4221-b485-b01dc8a1a6d0",
     "title": "SmartPhone",
     "description": "SmartPhone Samsung",
     "code": "COD564",
@@ -99,7 +90,6 @@
     "thumbnails": []
   },
   {
-    "id": "96e44a0b-4537-4b7e-97bb-477cf233b1a1",
     "title": "Monitor",
     "description": "Descripción Monitor Samsung",
     "code": "COD579",
@@ -110,7 +100,6 @@
     "thumbnails": []
   },
   {
-    "id": "350de244-2701-42c3-a8b6-3e2aed35698d",
     "title": "Chocolino",
     "description": "Chocolate",
     "code": "COD979",
@@ -121,7 +110,6 @@
     "thumbnails": []
   },
   {
-    "id": "42af9397-7cc4-4d99-a436-0a4cd9f296c8",
     "title": "Azucar",
     "description": "Ledesma",
     "code": "COD129",
@@ -132,7 +120,6 @@
     "thumbnails": []
   },
   {
-    "id": "60f29b9f-29c7-4a6b-9960-299d769db264",
     "title": "Tablet",
     "description": "Descripción Tablet Samsung",
     "code": "COD574",
@@ -143,7 +130,6 @@
     "thumbnails": []
   },
   {
-    "id": "cc782e99-748f-4695-8c2a-624c20a08e59",
     "title": "Mouse",
     "description": "Descripción Mouese Samsung",
     "code": "COD594",
@@ -154,7 +140,6 @@
     "thumbnails": []
   },
   {
-    "id": "8e595491-768a-4d39-9843-ad9c5f732f28",
     "title": "Masitas",
     "description": "Descripción Masitas de Agua",
     "code": "COD879",
@@ -165,7 +150,6 @@
     "thumbnails": []
   },
   {
-    "id": "df6b93c9-184a-4421-bccd-fd3cfce803d4",
     "title": "Helado Grido",
     "description": "Helado de Crema",
     "code": "COD023",
@@ -176,7 +160,6 @@
     "thumbnails": []
   },
   {
-    "id": "10fbe388-43fe-4f27-a46b-5c7df6242fb3",
     "title": "Jabon Ariel",
     "description": "Jabon liquido",
     "code": "COD002",
@@ -187,7 +170,6 @@
     "thumbnails": []
   },
   {
-    "id": "607af4fd-752e-484f-b4d9-d92b22132e18",
     "title": "Mayonesa Natura",
     "description": "Mayonesa Natura",
     "code": "COD103",
