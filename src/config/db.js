@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
 
 // En el msg deje los datos estos
-const password = 'lala';
-const dataBD = 'lala';
-const URL = `lala`
+
+const password = ""
+const dataBD = ""
+const URL = ""
 
 // MongoDB connection
 const connectedMongoDB = async () => {
