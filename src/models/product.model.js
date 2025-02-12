@@ -7,62 +7,60 @@ const productsCollection = 'Products';
 
 const productSchema = new mongoose.Schema(
   {
-      title:
-      {
-        type: String,
-        required: [true, 'The title is required'],
-        max: 100
-      },
-      description:
-      {
-        type: String,
-        required: [true, 'The description is obligatory'],
-        max: 500
-      },
-      code:
-      {
-        type: String,
-        required: true,
-        max: 14,
-        unique: true
-      },
-      price:
-      {
-        type: Number,
-        required: [true, 'The price is obligatory']
-      },
-      stock:
-      {
-        type: Number,
-        required: true
-      },
-      status:
-      {
-        type: Boolean,
-        required: true
-      },
-      category:
-      {
-        type: String,
-        required: true,
-        unique: true
-      },
-      thumbnails:
-      {
-        type: Array, default: []
-      }
+    title:
+    {
+      type: String,
+      required: [true, 'The title is required'],
+      max: 100
+    },
+    description:
+    {
+      type: String,
+      required: [true, 'The description is obligatory'],
+      max: 500
+    },
+    code:
+    {
+      type: String,
+      required: true,
+      max: 14,
+      unique: true
+    },
+    price:
+    {
+      type: Number,
+      required: [true, 'The price is obligatory']
+    },
+    stock:
+    {
+      type: Number,
+      required: true
+    },
+    status:
+    {
+      type: Boolean,
+      required: true
+    },
+    category:
+    {
+      type: String,
+      required: true,
+      unique: true
+    },
+    thumbnails:
+    {
+      type: Array, default: []
+    }
   }
 );
 
 // Hook para validar al guardar (create o save)
 productSchema.pre("save", async function (next) {
   if (this.isModified("code") || this.isModified("title") || this.isModified("category")) {
-    // Normaliza el código (convierte a minúsculas y elimina espacios)
     this.code = this.code.toLowerCase().trim();
     this.title = this.title.trim();
     this.category = this.category.trim();
 
-    // Validar que el código no esté repetido en toda la colección
     const existingProductByCode = await this.constructor.findOne({
       code: this.code,
     });
@@ -76,11 +74,10 @@ productSchema.pre("save", async function (next) {
       );
     }
 
-    // Validar que no haya otro producto con el mismo título en la misma categoría
     const existingProductByTitle = await this.constructor.findOne({
       title: this.title,
       category: this.category,
-    });
+    })
 
     if (
       existingProductByTitle &&
@@ -88,7 +85,7 @@ productSchema.pre("save", async function (next) {
     ) {
       throw new Error(
         `El título "${this.title}" ya está en uso en la categoría "${this.category}".`
-      );
+      )
     }
   }
 
@@ -97,29 +94,29 @@ productSchema.pre("save", async function (next) {
 
 // Hook para validar al actualizar (findByIdAndUpdate o updateOne)
 productSchema.pre("findByIdAndUpdate", async function (next) {
-  const update = this.getUpdate(); // Obtiene los campos que se están actualizando
+  const update = this.getUpdate()
   console.log(update)
-  const { code, title, category } = update;
+  const { code, title, category } = update
 
   if (code || title || category) {
-    const query = this.getQuery(); // Obtiene el filtro de la consulta (por ejemplo, { _id: ... })
+    const query = this.getQuery()
 
-    // Normaliza los campos si están presentes en la actualización
-    if (code) update.code = code.toLowerCase().trim();
+    
+    if (code) update.code = code.toLowerCase().trim()
     if (title) update.title = title.trim();
-    if (category) update.category = category.trim();
+    if (category) update.category = category.trim()
 
-    // Validar que el código no esté repetido en toda la colección
+    
     if (code) {
       const existingProductByCode = await this.model.findOne({
         code: update.code,
-        _id: { $ne: query._id }, // Excluye el documento actual
-      });
+        _id: { $ne: query._id }, 
+      })
 
       if (existingProductByCode) {
         throw new Error(
           `El código "${update.code}" ya está en uso en la categoría "${existingProductByCode.category}".`
-        );
+        )
       }
     }
 
@@ -128,7 +125,7 @@ productSchema.pre("findByIdAndUpdate", async function (next) {
       const existingProductByTitle = await this.model.findOne({
         title: update.title,
         category: update.category,
-        _id: { $ne: query._id }, // Excluye el documento actual
+        _id: { $ne: query._id },
       });
 
       if (existingProductByTitle) {
@@ -139,13 +136,13 @@ productSchema.pre("findByIdAndUpdate", async function (next) {
     }
   }
 
-  next();
+  next()
 });
 
 
-productSchema.plugin(mongoosePaginate);
+productSchema.plugin(mongoosePaginate)
 
-export const Product = mongoose.model(productsCollection, productSchema);
+export const Product = mongoose.model(productsCollection, productSchema)
 
 
 

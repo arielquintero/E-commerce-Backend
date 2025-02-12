@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras</title>
+    <!-- CDN de Bulma -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body>
+    <section class="section">
+        <div class="container">
+          <div class="fixed-grid has-auto-count">
+          <div class="grid">
+            <h4 class="cell title is-4 has-text-centered">Carrito de Compras</h4>
+            <h4 class="cell has-text-centered"><strong>ID del Carrito:</strong> {{cart._id}}</h4>
+          </div>
+          </div>
+
+            <div class="columns is-multiline">
+                {{#if cart.products.length}}
+                    {{#each cart.products}}
+                        <div class="column is-3">
+                            <div class="card">
+                                <div class="card-image">
+                                    <figure class="image is-4by3">
+                                        <img src="{{this.product.image}}" alt="{{this.product.title}}">
+                                    </figure>
+                                </div>
+                                <div class="card-content has-auto-count">
+                                    <p class="title is-4">{{this.product.title}}</p>
+                                    <p class="subtitle is-6">Precio: ${{this.product.price}}</p>
+                                    <p><strong>Cantidad:</strong> <span id="quantity-{{this.product._id}}">{{this.quantity}}</span></p>
+                                </div>
+                                <footer class="card-footer">
+                                    <button class="card-footer-item button is-success is-normal" onclick="updateQuantity('{{../cart._id}}', '{{this.product._id}}', 1)"><strong class="content is-large">+</strong></button>
+                                    <button class="card-footer-item button is-warning is-normal" onclick="updateQuantity('{{../cart._id}}', '{{this.product._id}}', -1)"><strong class="content is-large">-</strong></button>
+                                    <button class="card-footer-item button is-danger is-normal" onclick="removeProduct('{{../cart._id}}', '{{this.product._id}}')"><strong class="content is-large">🗑️</strong></button>
+                                </footer>
+                            </div>
+                        </div>
+                    {{/each}}
+                {{else}}
+                    <div class="notification is-warning has-text-centered">
+                        <p>El carrito está vacío.</p>
+                    </div>
+                {{/if}}
+            </div>
+
+            <!-- Botón para vaciar carrito -->
+            <div class="has-text-centered mt-4">
+                <button class="button is-danger is-medium" onclick="clearCart('{{carts._id}}')">Vaciar Carrito ❌</button>
+            </div>
+
+            <!-- Botón para volver a productos -->
+            <div class="has-text-centered mt-4">
+                <button class="button is-link is-medium" onclick="window.location.href='/'">Volver a Productos</button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        async function updateQuantity(cid, pid, quantityChange) {
+          try {
+            if (!cid || !pid) {
+              console.error("❌ cid o pid no definidos.")
+              return;
+            }
+
+            const response = await fetch(`/carts/${cid}/products/${pid}`, {
+              method: 'PUT',
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ quantity: quantityChange })
+              
+            })
+            console.log(quantityChange)
+
+            if (response.ok) {
+              const updatedCart = await response.json();
+              console.log("✅ Respuesta del servidor:", updatedCart);
+
+              // Buscar el producto actualizado en la respuesta
+              const updatedProduct = updatedCart.payload.products.find(p => p.product._id === pid);
+              if (updatedProduct) {
+                document.getElementById(`quantity-${pid}`).innerText = updatedProduct.quantity;
+              } else {
+                console.warn("⚠️ Producto no encontrado en la respuesta.");
+              }
+            } else {
+              console.error("❌ Error al actualizar cantidad:", response.status);
+            }
+          } catch (error) {
+            console.error("❌ Error en updateQuantity:", error);
+          }
+        }
+
+        async function removeProduct(cid, pid) {
+          try {
+            if (!cid || !pid) {
+              alert("❌ cid o productId no definidos.");
+              return;
+            }
+
+            const response = await fetch(`/carts/${cid}/products/${pid}`, {
+              method: 'DELETE'
+            });
+
+            if (response.ok) {
+              alert("✅ Producto eliminado correctamente.");
+              location.reload();
+            } else {
+              console.error("❌ Error al eliminar producto:", response.status);
+            }
+          } catch (error) {
+            console.error("❌ Error en removeProduct:", error);
+          }
+        }
+
+        async function clearCart(cid) {
+          try {
+            if (!cid) {
+              console.error("❌ cid no definido.");
+              return;
+            }
+
+            const response = await fetch(`/carts/${cid}`, {
+              method: 'DELETE'
+            });
+
+            if (response.ok) {
+              console.log("✅ Carrito vaciado correctamente.");
+              location.reload();
+            } else {
+              console.error("❌ Error al vaciar carrito:", response.status);
+            }
+          } catch (error) {
+            console.error("❌ Error en clearCart:", error);
+          }
+        }
+
+        window.updateQuantity = updateQuantity;
+        window.removeProduct = removeProduct;
+        window.clearCart = clearCart;
+
+      })
+    </script>
+
+</body>
+</html>
+

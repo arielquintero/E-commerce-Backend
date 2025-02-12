@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalle del Producto</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body>
+  <section class="section">
+    <div class="container">
+      <h1 class="title has-text-centered">{{product.title}}</h1>
+      <div class="card">
+        <div class="card-content">
+          <p><strong>Descripción:</strong> {{product.description}}</p>
+          <p><strong>Código:</strong> {{product.code}}</p>
+          <p><strong>Precio:</strong> ${{product.price}}</p>
+          <p><strong>Stock:</strong> {{product.stock}}</p>
+          <p><strong>Categoría:</strong> {{product.category}}</p>
+          <p><strong>Estado:</strong> {{#if product.status}}Disponible{{else}}No Disponible{{/if}}</p>
+          
+          <!-- Boton agregar al carrito -->
+        
+          <button class="button is-primary" id="addToCart">Agregar al Carrito</button>
+          <a class="button is-link" id="viewCart">Ver Carrito</a> <!-- Sin href estático -->
+ <!-- Botón para ver el carrito -->
+        </div>
+      </div>
+      <div class="has-text-centered">
+        <a class="button is-link" href="/">Volver a la lista de productos</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.getElementById('addToCart').addEventListener('click', async function () {
+      let quantity = document.getElementById('quantity').value
+      let pid = "{{product._id}}";
+      let cid = localStorage.getItem('selectedCart')
+      if (!cid) {
+        alert('⚠️ Debes seleccionar un carrito primero en la pantalla de inicio.');
+        return;
+      }
+      try {
+        let response = await fetch(`/carts/${cid}/products/${pid}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ quantity: parseInt(quantity) })
+        });
+        if (response.ok) {
+          alert('✅ Producto agregado al carrito correctamente.');
+        } else {
+          let errorData = await response.json();
+          alert('❌ Error al agregar producto: ' + errorData.error)
+        }
+      } catch (error) {
+        alert('⚠️ Error al agregar el producto al carrito.')
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+    try {
+        const cid = localStorage.getItem('selectedCart'); // Obtener el carrito guardado
+        
+        const viewCartButton = document.getElementById('viewCart')
+        if (!viewCartButton) {
+            return;
+        }
+
+        if (cid) {
+            viewCartButton.href = `/carts/${cid}`
+            viewCartButton.style.display = 'inline-block'
+        } else {
+            viewCartButton.style.display = 'none'
+        }
+    } catch (error) {
+        alert("🔴 Error al manejar el botón de ver carrito:", error);
+    }
+});
+
+  </script>
+</body>
+</html>

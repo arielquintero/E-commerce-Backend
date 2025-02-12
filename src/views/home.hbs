@@ -1,145 +1,277 @@
-<h1 class="title has-text-centered">Lista de Productos</h1>
+<!DOCTYPE html>
+<html lang="es">
 
-<form method="GET" action="/">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista de Productos</title>
+  <!-- Estilos, con Bulma -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
 
-  <div class="field">
-    <label class="label">Categoría</label>
-    <div class="control">
-      <div class="select">
-        <select name="category">
-          <option value="">Todas</option>
-          {{#each categories}}
+<body>
+  <section class="section">
+    <div class="container">
+      <!-- Botón para seleccionar carrito -->
+      <section class="section">
+        <div class="container">
+          <h4 class="title is-4 has-text-centered">Carritos Disponibles</h4>
+
+          <!-- Selección de carrito -->
+          <div class="field has-addons has-addons-right">
+            <div class="control">
+              <div id="selectedCartContainer" class="box has-text-centered">
+                <p id="selectedCartText">No hay carrito seleccionado</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lista de carritos -->
+          <div id="cartList" class="columns is-multiline">
+            <!-- Aquí se insertarán los carritos dinámicamente -->
+          </div>
+
+          <!-- Contenedor del botón para crear carritos -->
+          <div class="has-text-centered mt-4" id="createCartContainer">
+            <!-- Se mostrará el botón solo si hay menos de 3 carritos -->
+          </div>
+
+          <!-- Botón para cargar carritos -->
+          <div class="has-text-centered mt-4">
+            <button class="button is-primary" id="loadCarts" onclick="loadCarts()">Cargar Carritos</button>
+          </div>
+        </div>
+      </section>
+      <h1 class="title is-1 has-text-centered">Lista de Productos</h1>
+    </div>
+  </section>
+
+  <!-- Formulario de filtros -->
+  <form method="GET" action="/">
+    <div class="field">
+      <label class="label">Categoría</label>
+      <div class="control">
+        <div class="select">
+          <select name="category">
+            <option value="">Todos</option>
+            {{#each categories}}
             <option value="{{this.name}}" {{#if this.isSelected}}selected{{/if}}>{{this.name}}</option>
-          {{/each}}
-        </select>
+            {{/each}}
+          </select>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="field">
-    <label class="label">Límite</label>
-    <div class="control">
-      <input class="input" type="number" name="limit" value="{{limit}}">
-    </div>
-  </div>
-
-  <div class="field is-flex-wrap-wrap">
-    <label class="label">Ordenar por</label>
-    <div class="control">
-      <div class="select">
-        <select name="sort" class="is-hovered">
-          <option value="">Más relevantes</option>
-          <option value="preAsc" {{#if preAsc}}selected{{/if}}>Menor precio</option>
-          <option value="preDesc" {{#if preDesc}}selected{{/if}}>Mayor precio</option>
-        </select>
+    <div class="field">
+      <label class="label">Límite</label>
+      <div class="control">
+        <input class="input" type="number" name="limit" value="{{limit}}">
       </div>
     </div>
-  </div>
 
-  <div class="control pt-2 pb-5">
-    <button class="button is-primary" type="submit">Filtrar</button>
-  </div>
-
-</form>
-
-<div class="columns is-multiline">
-  {{#each products.docs}}
-  <div class="column is-one-third">
-    <div class="card">
-      <div class="card-content">
-        <p class="title"><strong>{{this.title}}</strong></p>
-        <p><strong>Description:</strong> {{this.description}}</p>
-        <p><strong>Code:</strong> {{this.code}}</p>
-        <p><strong>Price:</strong> ${{this.price}}</p>
-        <p><strong>Stock:</strong> {{this.stock}}</p>
+    <div class="field">
+      <label class="label">Ordenar por</label>
+      <div class="control">
+        <div class="select">
+          <select name="sort">
+            <option value="">Mas relevantes</option>
+            <option value="preAsc" {{#if preAsc}}selected{{/if}}>Menor precio</option>
+            <option value="preDesc" {{#if preDesc}}selected{{/if}}>Mayor precio</option>
+          </select>
+        </div>
       </div>
     </div>
-  </div>
-  {{/each}}
-</div>
+    <div class="field">
+      <label class="label">Disponiblilidad</label>
+      <div class="control">
+        <div class="select">
+          <select name="status">
+            <!-- Si isAvailable es true, se selecciona "Disponible"; de lo contrario, "No Disponible" -->
+            <option value="true" {{#if isAvailable}}selected{{/if}}>Disponible</option>
+            <option value="false" {{#unless isAvailable}}selected{{/unless}}>No Disponible</option>
+          </select>
+        </div>
+      </div>
+    </div>
 
-<div class="position-relative m-4">
-  <nav class="navbar is-centered" role="navigation" aria-label="pagination">
+    <div class="control pt-2 pb-5">
+      <button class="button is-primary" type="submit">Filtrar</button>
+    </div>
+  </form>
+
+  <!-- Listado de productos -->
+  <div class="columns is-multiline">
+    {{#each products}}
+    <div class="column is-one-third">
+      <div class="card">
+        <div class="card-content">
+          <p class="title"><strong>{{this.title}}</strong></p>
+          <p><strong>Descripción:</strong> {{this.description}}</p>
+          <p><strong>Código:</strong> {{this.code}}</p>
+          <p><strong>Precio:</strong> ${{this.price}}</p>
+          <p><strong>Stock:</strong> {{this.stock}}</p>
+          <a class="button is-link" href="/product/{{this._id}}">Ver Detalles</a>
+        </div>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+
+  <!-- Paginación -->
+  <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+    {{#if pagination.hasPrevPage}}
+    <a class="pagination-previous"
+      href="/?page={{pagination.prevPage}}&limit={{limit}}&category={{category}}&sort={{sort}}&status={{status}}">Anterior
+    </a>
+    {{else}}
+    <a class="pagination-previous" disabled>Anterior</a>
+    {{/if}}
+
+    {{#if pagination.hasNextPage}}
+    <a class="pagination-next"
+      href="/?page={{pagination.nextPage}}&limit={{limit}}&category={{category}}&sort={{sort}}&status={{status}}">
+      Siguiente
+    </a>
+    {{else}}
+    <a class="pagination-next" disabled>Siguiente</a>
+    {{/if}}
+
     <ul class="pagination-list">
-      {{#if products.hasPrevPage}}
-        <li>
-          <a class="pagination-previous" href="/?page={{products.prevPage}}&limit={{limit}}&category={{category}}&sort={{sort}}">
-            Previous
-          </a>
-        </li>
-      {{/if}}
-
-      {{#each products.pageNumbers}}
-        <li>
-          <a class="pagination-link {{#if this.isCurrent}}is-current{{/if}}" href="/?page={{this.page}}&limit={{../limit}}&category={{../category}}&&sort={{../sort}}">
-            {{this.page}}
-          </a>
-        </li>
+      {{#each pagination.pageNumbers}}
+      <li>
+        <a class="pagination-link {{#if isCurrent}}is-current{{/if}}"
+          href="/?page={{page}}&limit={{../limit}}&category={{../category}}&sort={{../sort}}&status={{../status}}">
+          {{page}}
+        </a>
+      </li>
       {{/each}}
-
-      {{#if products.hasNextPage}}
-        <li>
-          <a class="pagination-next" href="/?page={{products.nextPage}}&limit={{limit}}&category={{category}}&sort={{sort}}">
-            Next
-          </a>
-        </li>
-      {{/if}}
     </ul>
   </nav>
-  <p class="pagination-link">
-    Current Page: {{products.page}}
+  <p class="has-text-centered pagination-link">
+    Página actual: {{pagination.page}} de {{pagination.totalPages}}
   </p>
-</div>
-
-
-
-{{!-- 
-<h1 class="title has-text-centered">Lista de Productos</h1>
-
-<div class="columns is-multiline">
-  {{#each products.docs}}
-  <div class="column is-one-third">
-    <div class="card">
-      <div class="card-content">
-        <p class="title"><strong>{{this.title}}</strong></p>
-        <p><strong>Description:</strong> {{this.description}}</p>
-        <p><strong>Code:</strong> {{this.code}}</p>
-        <p><strong>Price:</strong> ${{this.price}}</p>
-        <p><strong>Stock:</strong> {{this.stock}}</p>
-      </div>
-    </div>
   </div>
-  {{/each}}
-</div>
+  </section>
 
-<div class="is-relative m-4">
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const selectedCart = localStorage.getItem("selectedCart");
+        const selectedCartText = document.getElementById("selectedCartText");
 
-    <nav class="navbar is-centered" role="navigation" aria-label="pagination">
-      <ul class="pagination-list">
-        {{#if products.hasPrevPage}}
-          <li>
-            <a class="pagination-previous " href="/?page={{products.prevPage}}&&limit={{limit}}">
-              Previous
-            </a>
-          </li>
-        {{/if}}
+        if (selectedCart && selectedCartText) {
+          selectedCartText.textContent = `Carrito seleccionado: ${selectedCart}`;
+        }
+    });
 
-        {{! Links a siguientes páginas }}
+    document.addEventListener("DOMContentLoaded", function () {
 
-        {{#if products.hasNextPage}}
-          <li>
-            <a class="pagination-next"
-              href="/?page={{products.nextPage}}&&limit={{limit}}"
-            >Next page</a>
-          </li>
-        {{/if}}
+      async function loadCarts() {
+        try {
 
-      </ul>
-    </nav>
-    <p class="pagination-link">
-      Current Page:
-      {{products.page}}
-    </p>
-  </div>
+          const response = await fetch('/carts/all', {
+            headers: { 'Accept': 'application/json' }
+          });
 
- --}}
+          if (!response.ok) {
+            alert('Error al cargar los carritos');
+            return;
+          }
+
+          const data = await response.json();
+
+          const cartList = document.getElementById("cartList");
+          const createCartContainer = document.getElementById("createCartContainer");
+          const selectedCartContainer = document.getElementById('selectedCartContainer');
+          const selectedCartText = document.getElementById('selectedCartText');
+
+          if (!cartList || !createCartContainer || !selectedCartContainer || !selectedCartText) {
+            console.error("🔴 Elementos del DOM no encontrados.");
+            return;
+          }
+
+          // Limpiar elementos antes de actualizar
+          cartList.innerHTML = "";
+          createCartContainer.innerHTML = "";
+          selectedCartText.textContent = "No hay carrito seleccionado";
+
+          // Obtener el carrito previamente seleccionado
+          const selectedCart = localStorage.getItem('selectedCart');
+
+          const carts = data.payload;
+
+          if (carts.length > 0) {
+            carts.forEach(cart => {
+              // Agregar tarjetas de carritos al listado
+              const div = document.createElement("div");
+              div.classList.add("column", "is-4");
+              div.innerHTML = `
+                    <div class="card">
+                        <div class="card-content">
+                            <p class="title is-5">Carrito ID: ${cart._id}</p>
+                            <button class="button is-link" onclick="selectCart('${cart._id}')">
+                                Seleccionar Carrito
+                            </button>
+                        </div>
+                    </div>
+                `
+              cartList.appendChild(div)
+            })
+
+            if (carts.length < 3) {
+              createCartContainer.innerHTML = `
+                    <button class="button is-warning" onclick="createNewCart()">Crear Nuevo Carrito</button>
+                `
+            }
+          } else {
+            createNewCart();
+          }
+        } catch (error) {
+          alert("Error al cargar los carritos");
+        }
+      }
+
+      async function selectCart(cid) {
+        await localStorage.setItem('selectedCart', cid)
+        alert("Carrito seleccionado: " + cid)
+        const selectedCartContainer = document.getElementById('selectedCartContainer')
+        const selectedCartText = document.getElementById('selectedCartText')
+
+        if (selectedCartContainer && selectedCartText) {
+          selectedCartText.textContent = `Carrito seleccionado: ${cid}`
+        }
+      }
+
+      async function createNewCart() {
+
+        try {
+          const response = await fetch('/carts/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+          });
+
+          if (!response.ok) {
+            alert(`❌ Error al crear el carrito: ${response.statusText}`)
+            return
+          }
+          const data = await response.json()
+
+          if (!data.payload || !data.payload._id) {
+            return
+          }
+
+          localStorage.setItem('selectedCart', data.payload._id)
+          alert("✅ Nuevo carrito creado: " + data.payload._id)
+          loadCarts(); // Recargar la lista de carritos
+
+        } catch (error) {
+          alert("❌ Error al conectar con el servidor.")
+        }
+      }
+
+      window.loadCarts = loadCarts
+      window.selectCart = selectCart
+      window.createNewCart = createNewCart
+    })
+  </script>
+</body>
+
+</html>

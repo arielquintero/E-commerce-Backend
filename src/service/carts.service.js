@@ -4,209 +4,214 @@ import { isValidID } from '../helpers/index.js';
 import { __dirname } from '../../dirname.js'
 
 class CartsService {
-  constructor() {
-    //this.updateQuantityProduct = this.updateQuantityProduct.bind(this);
-  }
+  constructor() { }
 
-  async getCartById(cid) {
-    
-    if (!cid) { throw new Error('ID is required') }
+  async getCartById({ cid }) {
 
-    const cartId = await Cart.findById(cid)
-    
-    if (!cartId) { 
-      throw new Error(`Cart with ID: ${cid} not found`) 
-      }
-    return cartId
+    if (!isValidID(cid)) { throw new Error(`❌ The cart ID ${cid} is invalid`) }
+
+    if (!cid) { throw new Error('❌ The ID is required') }
+
+    const cart = await Cart.findById(cid).populate('products.product').lean()
+
+    if (!cart) { throw new Error(`❌ The cart not found in the database with id ${cid}`) }
+
+    return cart
   }
 
   async createNewCart() {
-    try {
-      const newCart = new Cart()
+  
+    const newCart = new Cart()
 
-      await newCart.save()
-      
-      return newCart
-    
-    } catch (error) {
-      throw new Error(`Error creating cart: ${error.message}`)
-    }
+    await newCart.save()
+
+    return newCart
+
   }
 
-  async addProductByIdCart({ cid, pid}) {
-    try {
-      if(!isValidID(cid) || !isValidID(pid)) { throw new Error('Cart ID and Product ID is invalid') }
-      
-      const cart = await Cart.findById(cid)
-      if(!cart) { throw new Error('Not fount cart') }
+  async addProductByIdCart({ cid, pid }) {
+    
+    if (!isValidID(cid) || !isValidID(pid)) { throw new Error(`❌ The cart ID ${cid} and Product ID ${pid} is invalid`) }
 
-      const product = await Product.findById(pid)
-      
-      if(!product) { throw new Error('Not fount product') }
+    const cart = await Cart.findById(cid)
+    if (!cart) { throw new Error(`❌ The cart not found in the database with id ${cid}`) }
 
-      if (product.stock <= 0) {
-      throw new Error(`❌ Product ${product.title} is out of stock and cannot be added.`);
-      }
+    const product = await Product.findById(pid)
 
-      const productInCart = cart.products.find(prod => prod.product.equals(product._id))
+    if (!product) { throw new Error(`❌ The product with id ${pid} not found`) }
 
-      if (productInCart) {
-        productInCart.quantity += 1
-        product.stock -= 1
-        productInCart.product.stock = product.stock  
-        }
-        else {
-          cart.products.push({product: product._id, stock: product.stock - 1})
-          }
-
-      await Product.updateOne(
-        {_id: pid},
-        {$inc: { stock: -1 }}
-        )
-      console.log(product.stock)
-
-      cart.markModified('products')
-      await cart.save()
-
-      return cart
-
-    } catch (error) {
-        throw new Error(`Error adding product to cart: ${error.message}`)
+    if (product.stock <= 0) {
+      throw new Error(`❌ The product ${product.title} is out of stock and cannot be added.`);
     }
+
+    const productInCart = cart.products.find(prod => prod.product.equals(product._id))
+
+    if (productInCart) {
+      productInCart.quantity += 1
+      product.stock -= 1
+      productInCart.product.stock = product.stock
+    }
+    else {
+      cart.products.push(
+        {
+          product: product._id, stock: product.stock - 1
+        }
+      )
+    }
+
+    await Product.updateOne(
+      { _id: pid },
+      { $inc: { stock: -1 } }
+    )
+
+    cart.markModified('products')
+    await cart.save()
+
+    return cart
+
   }
 
   async updateQuantityProduct(cid, pid, quantity) {
-    try {
 
-      if (!isValidID(cid) || !isValidID(pid)) { throw new Error('Cart ID and Product ID is invalid') }
+    if (!isValidID(cid) || !isValidID(pid)) { throw new Error(`❌ The cart ID and Product ID ${pid} is invalid`) }
 
-      const cart = await Cart.findById(cid)
+    const cart = await Cart.findById(cid)
 
-      if (!cart) { throw new Error('Cart not found in the database') }
+    if (!cart) { throw new Error(`❌ The cart not found in the database with id ${cid}`) }
 
-      let numQuantity = Number(quantity)
-      
-      if (isNaN(numQuantity) || numQuantity === 0) { throw new Error('Quantity must be a non-zero number') }
+    const product = await Product.findById(pid)
 
-      const indexProductInCart = cart.products.findIndex(prod => prod.product.equals(pid))
-      
-      if (indexProductInCart === -1) { throw new Error('No existing product in cart with: ',pid)} 
+    if (!product) { throw new Error(`❌ The product with id ${pid} not found`) }
 
-      const currentQuantity = cart.products[indexProductInCart].quantity
+    let numQuantity = Number.parseInt(quantity)
 
-      const newQuantity = currentQuantity + numQuantity
+    if (isNaN(numQuantity) || (!isFinite(numQuantity)) || numQuantity === 0) { throw new Error('❌ The quantity must be a non-zero number') }
 
-      if (newQuantity < 0 ) { throw new Error('When updating to the new quantity it remains below zero') }
+    const indexProductInCart = cart.products.findIndex(prod => prod.product.equals(pid))
 
-      const updatedStock = await this.#updatedAndCheckingStock(pid, numQuantity)
+    if (indexProductInCart === -1) { throw new Error(`❌ No existing product in cart with: ${pid}`) }
 
-      newQuantity === 0 
-      ? cart.products.splice(indexProductInCart, 1) 
-      : cart.products[indexProductInCart].quantity = newQuantity;
-      
-      cart.markModified('products')
+    let currentQuantity = cart.products[indexProductInCart].quantity
 
-      const updatedCart = await cart.save()
+    let newQuantity = currentQuantity + numQuantity
 
-      return { updatedCart, updatedStock }
+    if (newQuantity < 0) { throw new Error('❌ When updating to the new quantity it remains below zero') }
 
-    } catch (error) { 
-      throw new Error('❌ Error updanting cart')      
+    //console.log('Updating product stock:', { pid, newQuantity, currentQuantity });
+
+    let stockChange = -numQuantity
+
+    if (numQuantity > 0 && product.stock < numQuantity) {
+      throw new Error(`❌ Not enough stock available. Available: ${product.stock}, Required: ${numQuantity}`);
     }
+
+    await Product.updateOne(
+      { _id: pid },
+      { $inc: { stock: stockChange } }
+    )
+
+    if (newQuantity === 0) {
+      cart.products.splice(indexProductInCart, 1)
+    } else {
+      cart.products[indexProductInCart].quantity = newQuantity
+    }
+
+    cart.markModified('products')
+
+    const updatedCart = await cart.save()
+
+    await updatedCart.populate('products.product')
+
+    return updatedCart
+
   }
 
-  async deleteProductInCart({ cid, pid }) {
-    console.log(pid)
-    try {
-      if (!isValidID(cid) || !isValidID(pid)) { throw new Error('Cart ID and Product ID is invalid') }
-
-      const cart = await Cart.findById(cid);
-
-      if (!cart) { throw new Error('Cart not found') }
-      
-      const productId = await Product.findById(pid);
-
-      if(!productId) { throw new Error('Not fount product') }
+  async deleteOneProductInCart({ cid, pid }) {
     
-      console.log(productId.stock)
+    if (!isValidID(cid) || !isValidID(pid)) { throw new Error(`❌ The cart ID and Product ID: ${pid} is invalid`) }
 
-      const productIndex = cart.products.findIndex(product => product.product.equals(pid));
+    const cart = await Cart.findById(cid);
 
-      const productInCart = cart.products.find(product => product.product._id.equals(pid))
+    if (!cart) { throw new Error(`❌ The cart not found in the database with id ${cid}`) }
 
-      let quantity = productInCart.quantity
+    const productId = await Product.findById(pid)
 
-      await Product.updateOne(
-        {_id: pid},
-        {$inc: { stock: +quantity }}
-        ) 
+    if (!productId) { throw new Error(`❌ The product with id ${pid} not found`) }
 
-      if (productIndex !== -1) { cart.products.splice(productIndex, 1) }
+    console.log(productId.stock)
 
-      cart.markModified('products');
+    const productIndex = cart.products.findIndex(product => product.product.equals(pid))
 
-      await cart.save();
-      return cart;
-    } catch (error) {
-      throw new Error(`Error deleting product to cart: ${error.message}`)
-    }
+    const productInCart = cart.products.find(product => product.product._id.equals(pid))
+
+    let quantity = productInCart.quantity
+
+    await Product.updateOne(
+      { _id: pid },
+      { $inc: { stock: +quantity } }
+    )
+
+    if (productIndex !== -1) { cart.products.splice(productIndex, 1) }
+
+    cart.markModified('products')
+
+    await cart.save()
+
+    return cart
+
   }
 
-  async deleteAllProductsInCart(cid) {
-    try {
-      if (!isValidID(cid)) {
-        throw new Error('Cart ID is invalid')
-      }
-
-      const cart = await Cart.findById(cid)
-
-      if (!cart) {
-        throw new Error('Cart not found')
-      }
-
-      cart.products = []
-
-      cart.markModified('products')
-
-      await cart.save()
-
-      return cart
-
-    } catch (error) {
-      throw new Error(`Error deleting all products to cart: ${error.message}`)
+  async deleteAllProductsInCart({ cid }) {
+    
+    if (!isValidID(cid)) {
+      throw new Error(`❌ The ID not valid id ${cid}`)
     }
+
+    const cart = await Cart.findById(cid)
+
+    if (!cart) {
+      throw new Error(`❌ The cart not found in the database with id ${cid}`)
+    }
+
+    const buyAllProducts = false
+
+    const allProductsInCart = cart.products
+
+    for (const product of allProductsInCart) {
+      await Product.updateOne(
+        { _id: product.product },
+        { $inc: { stock: product.quantity } }
+      )
+    }
+
+    cart.products = []
+
+    cart.markModified('products')
+
+    await cart.save()
+
+    return cart
+
   }
 
   async updateCart({ id, products }) {
     const cartIndex = this.carts.findIndex(cart => cart.id === id)
 
-    if (cartIndex === -1) { throw new Error(`Cart with ID: ${id} not found`) }
+    if (cartIndex === -1) { throw new Error(`❌ The cart not found in the database with id ${cid}`) }
 
     this.carts[cartIndex].products = products
   }
 
-  async #updatedAndCheckingStock(pid, quantityChange=null) {
-    
+  async getAllCarts() {
     try {
-      
-      const product = await Product.findById(pid)
-
-      let newStock = product.stock - quantityChange
-
-      if (quantityChange > 0 && product.stock < quantityChange) { throw new Error(`Not enough stock. Only ${product.stock} units available`) }
-
-      if (quantityChange < 0) { newStock = product.stock + (-1)*quantityChange }
-
-      product.stock = newStock
-
-      await product.save()
-      console.log(`✅ Nuevo stock de ${pid}: ${product.stock}`);
-      return product.stock
+      const carts = await Cart.find().lean()
+      if(!carts){
+        throw new Error(`❌ The cart not existing in the database`)
+      }
+      return carts
     } catch (error) {
-      console.error('❌ ERROR REAL en updateStock:', error);
-      throw new Error(`Error updating stock: ${error.message}`);
+      next(error)
     }
   }
 }
-//export const cartLogic = new CartLogic({ path: './src/db/carts.json' });
 export const cartsService = new CartsService();
