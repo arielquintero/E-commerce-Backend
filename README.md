@@ -24,3 +24,5 @@ donde se gestionan productos y carritos.
 - [X] Utilizamos el midleware morgan para facilitar la vista de la peticiones por la terminal.
 - [X] Para dar estilos use Bulma.
 - [X] Se creo un pequeño navbar para moverse entre home y realtimeproducts.
+
+<h3> Entrega Final E-commerce CRUD Handlebars persistencia MongoDB </h3>
